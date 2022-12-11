@@ -26,7 +26,7 @@ Then:
 
 2. Build the binary:
   ```shell
-  xk6 build --with github.com/radepopovic/xk6-read-file
+  xk6 build --with github.com/nano-interactive/PerformanceTest-xk6ReadFile
   ```
 
 ## Development

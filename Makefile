@@ -10,7 +10,7 @@ clean:
 ## build: Builds a custom 'k6' with the local extension. 
 build:
 	go install go.k6.io/xk6/cmd/xk6@v0.7.0
-	xk6 build --with github.com/radepopovic/xk6-read-file=.
+	xk6 build --with github.com/nano-interactive/PerformanceTest-xk6ReadFile=.
 
 ## test: Executes any unit tests.
 test:
