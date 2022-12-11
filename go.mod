@@ -1,4 +1,4 @@
-module github.com/radepopovic/xk6-read-file
+module github.com/nano-interactive/PerformanceTest-xk6ReadFile
 
 go 1.18
 
