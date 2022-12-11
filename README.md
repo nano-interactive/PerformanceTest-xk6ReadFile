@@ -64,7 +64,7 @@ export function teardown() {
 ```
 
 ## Thanks
-Thank you [SharedArray](https://k6.io/docs/javascript-api/k6-data/sharedarray/) and https://github.com/grafana/xk6-exec for the inspiration.
+Credits: [SharedArray](https://k6.io/docs/javascript-api/k6-data/sharedarray/) and https://github.com/grafana/xk6-exec
 
 ## TODO
 Make tests
