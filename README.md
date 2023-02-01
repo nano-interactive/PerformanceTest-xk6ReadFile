@@ -41,25 +41,47 @@ Once built, you can run your newly extended `k6` using:
  ./k6 run -u 1 -i 200 example.js
  ```
 
+## Available Functions
+### readFile.openFile(`FILE_NAME`)
+It should be initialised in `setup` javascript function. It points to a physical file from local folder.
+
+### readFile.closeFile()
+It must be called in `tearDown` javascript function to release pointer on opened file.
+
+### readFile.readLine()
+It reads next line from file. If the line is the end of file, it will rewind it to the beginning.
+
+### readFile.setFileStartJsFunc(`FUNC_NAME`)
+It registes javascript function within the K6 environment which will be called every time the first
+raw of the file is read. For example, if the file is rewound 5 times during the read, the `FUNC_NAME` will be called 5 times. 
 ## Example
 
 Make sure to open and close file in `setup()` and `teardown()`
 
 ```javascript
-// example.js
+
 import readFile from 'k6/x/read-file';
 
+let counter = 0;
 
 export function setup() {
+    readFile.setFileStartJsFunc(fileStarted)
     readFile.openFile('data_to_read.txt')
-
 }
 export default function () {
-    console.log(readFile.readLine());
+    let line = readFile.readLine();
+    console.log(line);
 }
 
 export function teardown() {
     readFile.close()
+}
+
+// every time first row is read, it fires an event
+// it needs to be initialised with readFile.setFileStartJsFunc(fileStarted)
+export function fileStarted() {
+    counter++;
+    console.log("File started",counter,"time");
 }
 ```
 
