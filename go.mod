@@ -1,6 +1,6 @@
 module github.com/nano-interactive/PerformanceTest-xk6ReadFile
 
-go 1.18
+go 1.19
 
 require (
 	github.com/dop251/goja v0.0.0-20230128084908-78b980256d04
