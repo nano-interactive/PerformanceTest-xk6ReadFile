@@ -1,12 +1,12 @@
 module github.com/nano-interactive/PerformanceTest-xk6ReadFile
 
-go 1.18
+go 1.19
 
 require go.k6.io/k6 v0.42.0
 
 require (
 	github.com/dlclark/regexp2 v1.8.0 // indirect
-	github.com/dop251/goja v0.0.0-20230128084908-78b980256d04 // indirect
+	github.com/dop251/goja v0.0.0-20230201132114-9343cf012195 // indirect
 	github.com/fatih/color v1.14.1 // indirect
 	github.com/go-sourcemap/sourcemap v2.1.4-0.20211119122758-180fcef48034+incompatible // indirect
 	github.com/josharian/intern v1.0.0 // indirect

@@ -6,19 +6,21 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"github.com/dop251/goja"
 	"go.k6.io/k6/js/common"
 	"go.k6.io/k6/js/modules"
 	"io"
+	"net/http"
 	"os"
 	"sync"
 )
 
-var mu sync.Mutex
-var file *os.File
-var scanner *bufio.Scanner
-var funcCallable goja.Callable
-var started = false
+var (
+	mu      sync.Mutex
+	file    *os.File
+	scanner *bufio.Scanner
+
+	rewindFileUrl = ""
+)
 
 func init() {
 	modules.Register("k6/x/read-file", new(RootModule))
@@ -73,13 +75,6 @@ func (r *ReadFile) ReadLine() string {
 
 	rt := r.vu.Runtime()
 
-	if !started {
-		if funcCallable != nil {
-			r.callFileStartJsFunc()
-		}
-		started = true
-	}
-
 	if scanner == nil {
 		common.Throw(rt, errors.New("file is not opened, use OpenFile in setup function"))
 	}
@@ -88,26 +83,13 @@ func (r *ReadFile) ReadLine() string {
 		if !r.resetFilePointer() {
 			common.Throw(rt, errors.New("nothing to read, the file is empty"))
 		}
-		if funcCallable != nil {
-			r.callFileStartJsFunc()
-		}
-
 	}
 
 	return scanner.Text()
 }
 
-func (r *ReadFile) callFileStartJsFunc() {
-	var err error
-	for i := 0; i < 5; i++ {
-		_, err = funcCallable(goja.Undefined())
-		if err == nil {
-			break
-		}
-	}
-	if err != nil {
-		common.Throw(r.vu.Runtime(), err)
-	}
+func (r *ReadFile) SetRewindFileUrl(url string) {
+	rewindFileUrl = url
 }
 
 // resetFilePoint resets a file pointer to the beginning of the file
@@ -117,15 +99,18 @@ func (r *ReadFile) resetFilePointer() bool {
 	if err != nil {
 		common.Throw(r.vu.Runtime(), err)
 	}
+
+	if rewindFileUrl != "" {
+		go func() {
+			_, _ = http.Get(rewindFileUrl)
+			if err != nil {
+				common.Throw(r.vu.Runtime(), err)
+			}
+		}()
+	}
+
 	scanner = bufio.NewScanner(file)
 	return scanner.Scan()
-}
-
-func (r *ReadFile) SetFileStartJsFunc(f goja.Callable) {
-	if f == nil {
-		common.Throw(r.vu.Runtime(), errors.New("SetFileStartJsFunc requires a function as first argument"))
-	}
-	funcCallable = f
 }
 
 func (*ReadFile) Close() {

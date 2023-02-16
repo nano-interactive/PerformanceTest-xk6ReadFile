@@ -51,9 +51,8 @@ It must be called in `tearDown` javascript function to release pointer on opened
 ### readFile.readLine()
 It reads next line from file. If the line is the end of file, it will rewind it to the beginning.
 
-### readFile.setFileStartJsFunc(`FUNC_NAME`)
-It registes javascript function within the K6 environment which will be called every time the first
-raw of the file is read. For example, if the file is rewound 5 times during the read, the `FUNC_NAME` will be called 5 times. 
+### readFile.setRewindFileUrl(`URL`)
+It sends a GET request to requested URL everytime when file rewind happen. 
 ## Example
 
 Make sure to open and close file in `setup()` and `teardown()`
